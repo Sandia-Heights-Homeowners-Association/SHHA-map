@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 24
       - run: npm run check
+      - run: npm test
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:

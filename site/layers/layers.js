@@ -279,3 +279,11 @@ lyr_Trees_10.set('fieldLabels', {'fid': 'hidden field', 'id': 'hidden field', 'N
 lyr_Trees_10.on('precompose', function(evt) {
     evt.context.globalCompositeOperation = 'normal';
 });
+// Legend filter metadata derived from this export, not hand-maintained category lists.
+lyr_RoadsandStreetsSpeedLimits_7.set('shhaCategories', {"kind":"field","field":"Speed_Limit","values":["15","20","25","30","45","50","-1"]});
+lyr_SandiaHeightsParcelsCountyZoning_0.set('shhaCategories', {"kind":"field","field":"ZoningDescription","values":["SINGLE FAMILY RESIDENTIAL ZONE","APARTMENT ZONE","NEIGHBORHOOD COMMERCIAL ZONE","RURAL AGRICULTURAL - 1-ACRE MINIMUM ZONE"]});
+lyr_SandiaHeightsParcelsDevelopmentUnitsParcels_2.set('shhaCategories', {"kind":"field","field":"Development_Unit","values":["Church","Little Cloud Park","W.L. Jackson Park","North 1","North 2","South 2 North Tramway Estates","North 3","Sandia Heights North","South 1","South 2","South 3","South 4","South 5","South 6","South 7","South 7 Chamisa Park","South 7 HOA1","South 7 HOA2","South 7 HOA3","South 7CC Cedar Canyon","South 8","South 8C","South 8 Hawks Landing","South 9","South 10","South 11","South 12","South 14","South 15","South 16","South 16 Red Rada","South 17","South 18","South 19","South 20","South 21","South 23","South 24","South 25","South 26","South 27","South 27B","South 27C","South 28","South 28B","South 28C"]});
+lyr_SandiaHeightsParcelsPropertyMaintenance_3.set('shhaCategories', {"kind":"field","field":"Property_Maintenance","values":["Clearcut","Xeriscape","Xeriscape + Clearcut","Natural","Not Assessed","Green Lawn"]});
+lyr_SandiaHeightsParcelsSolarPanels_1.set('shhaCategories', {"kind":"rules","rules":["exp_SandiaHeightsParcelsSolarPanels_1rule0_eval_expression","exp_SandiaHeightsParcelsSolarPanels_1rule1_eval_expression"]});
+lyr_SandiaHeightsParcelsUndevelopedParcels_4.set('shhaCategories', {"kind":"field","field":"undeveloped_parcels","values":["false","true"]});
+lyr_Trees_10.set('shhaCategories', {"kind":"field","field":"Name","values":["DEAD","ELM","ELM NV","COTTONWOOD","COTTONWOOD NV","ASH","DESERT WILLOW","GAMBEL OAK","MOUNTAIN MAHOGANY"]});

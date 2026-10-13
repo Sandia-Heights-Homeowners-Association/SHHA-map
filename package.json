@@ -6,6 +6,7 @@
   "engines": { "node": ">=24 <25" },
   "scripts": {
     "import": "node scripts/import-map.mjs",
-    "check": "node scripts/check-map.mjs"
+    "check": "node scripts/check-map.mjs",
+    "test": "node --test tests/*.test.mjs"
   }
 }

@@ -57,7 +57,26 @@ and phone. OpenStreetMap streets provide the default background. Area layers sta
 at 55% opacity so roads and landmarks remain visible; the slider changes area-layer
 opacity without fading point markers. The Layers panel retains all eleven layers
 with expandable legends, and Fit neighborhood restores the neighborhood extent.
-Plain background is also available. The importer reapplies these controls.
+Background choices are OpenStreetMap, Satellite / aerial (USGS) and Plain.
+The importer reapplies these controls.
+
+Each categorized legend has individual checkboxes, category counts and All/None
+buttons. The importer derives categories from the current exported QGIS styles,
+including ordered expression rules. Unclassified features retain their own
+category. Filters change rendering without removing features or hiding their
+attributes from public access. Layers with a single symbol retain their whole-layer
+toggle. An empty exported rule is not reinterpreted as a confirmed classification.
+
+The user authorized **public attribute tables for existing map data** on October
+13. Open Layer data, or View data beside a layer, to inspect every published
+attribute. Search and 30-row paging operate in browser memory. Match legend filters
+optionally limits rows to selected categories; it starts off so the full layer is
+available. Zoom highlights and locates a record without changing legend selections.
+All eleven tables reuse the approved public export; removed
+editor usernames, local paths and unused description/snippet fields stay removed.
+Tables are read-only and have no website database connection or additional exports.
+Private GIS attributes would require a separate protected data service; hiding
+categories or table columns on this public site is not access control.
 
 The address-search control uses an external OpenStreetMap Nominatim service.
 Street tiles load directly from `https://tile.openstreetmap.org/{z}/{x}/{y}.png`,
@@ -67,6 +86,13 @@ no availability guarantee; reassess hosting if traffic grows. See the
 [OpenStreetMap tile policy](https://operations.osmfoundation.org/policies/tiles/).
 The neighborhood layers still load from this website. No API key or paid map
 service is configured.
+
+USGS aerial tiles come from its documented
+[USGSImageryOnly service](https://www.usgs.gov/faqs/what-are-urls-imagery-services-national-map-and-are-they-cached-or-dynamic?items_per_page=6&page=1),
+with USDA/USGS attribution. This is historical aerial photography, not live imagery.
+Testing in this neighborhood found cache levels above 16 unavailable, so the source
+uses level 16 and upscales for closer views rather than requesting missing tiles.
+There is no imagery prefetch or offline tile download.
 
 ## Hosting and domain
 
@@ -108,3 +134,10 @@ The importer preserves these additions on re-export and versions the hosting CSS
 and JavaScript URLs to avoid reusing stale browser assets. Automatic publication
 continues through the existing GitHub Pages workflow; verify the exact release's
 deployment result in GitHub Actions. The custom domain remains deferred.
+
+October 13, 2026: added the USGS imagery background, category checkboxes generated
+from the current QGIS styles, and public attribute tables. Validation includes
+all eleven table totals/attribute columns, category-aware counts (North 1: 66),
+paging/search/no-match states, record location and source-rule tests. Close-zoom
+imagery is capped to the verified available cache level. Publishing and final
+remote verification follow through the existing GitHub Pages workflow.
