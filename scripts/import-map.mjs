@@ -53,11 +53,12 @@ try {
   html = html.replace(/<title>[\s\S]*?<\/title>/i, '<title>Sandia Heights Neighborhood Map | SHHA</title>');
   html = html.replace(/<meta\s+name="viewport"[^>]*>/i,
     '<meta name="viewport" content="width=device-width, initial-scale=1">');
-  html = html.replace(/<\/head>/i, '    <link rel="stylesheet" href="shha-map.css">\n    </head>');
+  html = html.replace(/<\/head>/i, '    <link rel="icon" type="image/svg+xml" href="shha-map.svg">\n    <link rel="stylesheet" href="shha-map.css">\n    </head>');
   html = html.replace(/<\/body>/i, '        <script src="shha-map.js"></script>\n    </body>');
   await writeFile(join(candidate, 'index.html'), html);
   await cp(join(root, 'assets/shha-map.css'), join(candidate, 'shha-map.css'));
   await cp(join(root, 'assets/shha-map.js'), join(candidate, 'shha-map.js'));
+  await cp(join(root, 'assets/shha-map.svg'), join(candidate, 'shha-map.svg'));
   await writeFile(join(candidate, '.nojekyll'), '');
   await checkMap(candidate, policy);
   // Replace the whole export, so deleted features/assets cannot linger.

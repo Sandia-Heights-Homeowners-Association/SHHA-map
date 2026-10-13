@@ -79,5 +79,9 @@ All eleven layers retained; source editor usernames, local paths and unused KML
 description/snippet fields removed. JavaScript/assets/field checks passed on Node 24.
 Retained properties and geometry match the original. Desktop/phone rendering,
 zoom, layer switching and parcel popups passed browser checks with no console
-errors. Failed imports preserve the preceding site. Initial deployment in progress.
-Custom-domain DNS and Larry's maintainer access are pending user setup.
+errors. Failed imports preserve the preceding site. Initial deployment
+`aecf4bea98c1383e88b010c1ff3b0f91479b3b31` passed GitHub Actions and anonymous
+remote rendering; the published HTML/CSS/JS matched the checked files.
+The default GitHub Pages address is live. Custom-domain binding/DNS/HTTPS and
+Larry's maintainer access are pending user setup. A browser tab icon is included
+to avoid requesting a nonexistent favicon at the organization site's root.
