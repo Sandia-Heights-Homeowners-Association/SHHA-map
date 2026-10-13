@@ -24,9 +24,11 @@ repository. No npm packages or GIS server are needed.
 
    On Windows, use the Windows folder path in the quotes. The import command
    replaces the previous `site/` only after validation succeeds. It removes
-   obsolete assets, reapplies the responsive layout, phone extent and title, and removes source
+   obsolete assets, reapplies the street background, map controls, responsive layout
+   and title, and removes source
    editor usernames, local file paths and unused KML description/snippet fields.
-   It does not change the original export, geometry, styles or visible map fields.
+   It does not change the original export, geometry, QGIS style definitions or
+   visible map fields. The browser applies adjustable area transparency.
 
 5. Review the changes in GitHub Desktop, write a short summary, commit and push.
 6. Wait for **Check and publish map** in GitHub Actions to succeed, then check the
@@ -51,9 +53,20 @@ python3 -m http.server 3140 --bind 127.0.0.1 --directory site
 
 Open `http://localhost:3140`. Use `python` or `py` instead of `python3` when that is
 the Python command on Windows. Check zoom, layer toggles and popups on a desktop
-and phone. The address-search control uses an external OpenStreetMap Nominatim
-service; the included map layers load from this website. No basemap is included
-in the supplied export.
+and phone. OpenStreetMap streets provide the default background. Area layers start
+at 55% opacity so roads and landmarks remain visible; the slider changes area-layer
+opacity without fading point markers. The Layers panel retains all eleven layers
+with expandable legends, and Fit neighborhood restores the neighborhood extent.
+Plain background is also available. The importer reapplies these controls.
+
+The address-search control uses an external OpenStreetMap Nominatim service.
+Street tiles load directly from `https://tile.openstreetmap.org/{z}/{x}/{y}.png`,
+with visible contributor attribution and normal browser caching/referrer behavior.
+There is no tile prefetch, offline download or proxy. This community service has
+no availability guarantee; reassess hosting if traffic grows. See the
+[OpenStreetMap tile policy](https://operations.osmfoundation.org/policies/tiles/).
+The neighborhood layers still load from this website. No API key or paid map
+service is configured.
 
 ## Hosting and domain
 
@@ -83,5 +96,15 @@ errors. Failed imports preserve the preceding site. Initial deployment
 `aecf4bea98c1383e88b010c1ff3b0f91479b3b31` passed GitHub Actions and anonymous
 remote rendering; the published HTML/CSS/JS matched the checked files.
 The default GitHub Pages address is live. Custom-domain binding/DNS/HTTPS and
-Larry's maintainer access are pending user setup. A browser tab icon is included
+Larry's maintainer access are pending user setup. The user chose to keep the
+GitHub address for now. A browser tab icon is included
 to avoid requesting a nonexistent favicon at the organization site's root.
+
+October 13, 2026: added OpenStreetMap background, adjustable area transparency,
+compact layer/legend panel, toolbar and neighborhood reset. Node 24 checks and
+desktop/phone browser checks passed: basemap switching, eleven layer controls,
+legend images, slider extremes, unchanged point opacity, reset and attribution.
+The importer preserves these additions on re-export and versions the hosting CSS
+and JavaScript URLs to avoid reusing stale browser assets. Automatic publication
+continues through the existing GitHub Pages workflow; verify the exact release's
+deployment result in GitHub Actions. The custom domain remains deferred.

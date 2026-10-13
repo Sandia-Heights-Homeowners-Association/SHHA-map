@@ -1,6 +1,7 @@
 import { cp, mkdir, mkdtemp, readFile, rename, rm, writeFile, access } from 'node:fs/promises';
 import { basename, dirname, extname, join, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { filesUnder, loadPolicy, omittedFields, parseLayer, validateProperties } from './map-files.mjs';
 import { checkMap } from './check-map.mjs';
 
@@ -50,11 +51,13 @@ try {
     count++;
   }
   let html = await readFile(join(candidate, 'index.html'), 'utf8');
+  const cssVersion = createHash('sha256').update(await readFile(join(root, 'assets/shha-map.css'))).digest('hex').slice(0, 12);
+  const jsVersion = createHash('sha256').update(await readFile(join(root, 'assets/shha-map.js'))).digest('hex').slice(0, 12);
   html = html.replace(/<title>[\s\S]*?<\/title>/i, '<title>Sandia Heights Neighborhood Map | SHHA</title>');
   html = html.replace(/<meta\s+name="viewport"[^>]*>/i,
     '<meta name="viewport" content="width=device-width, initial-scale=1">');
-  html = html.replace(/<\/head>/i, '    <link rel="icon" type="image/svg+xml" href="shha-map.svg">\n    <link rel="stylesheet" href="shha-map.css">\n    </head>');
-  html = html.replace(/<\/body>/i, '        <script src="shha-map.js"></script>\n    </body>');
+  html = html.replace(/<\/head>/i, `    <link rel="icon" type="image/svg+xml" href="shha-map.svg">\n    <link rel="stylesheet" href="shha-map.css?v=${cssVersion}">\n    </head>`);
+  html = html.replace(/<\/body>/i, `        <script src="shha-map.js?v=${jsVersion}"></script>\n    </body>`);
   await writeFile(join(candidate, 'index.html'), html);
   await cp(join(root, 'assets/shha-map.css'), join(candidate, 'shha-map.css'));
   await cp(join(root, 'assets/shha-map.js'), join(candidate, 'shha-map.js'));
