@@ -1,0 +1,2 @@
+# Preserve qgis2web/vendor formatting; check whitespace in maintained helpers.
+site/** -whitespace

@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+output/
+.playwright-cli/
+.import-*/
+.env*
+*.qgz
+*.qgs
+*.gpkg
+*.shp
+*.dbf
+*.shx
+*.pdf

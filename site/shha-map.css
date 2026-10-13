@@ -1,0 +1,25 @@
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+#map {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+}
+.layer-switcher .panel {
+  max-width: min(420px, calc(100vw - 64px));
+  max-height: calc(100dvh - 88px);
+  overflow: auto;
+}
+.ol-popup {
+  max-width: calc(100vw - 64px);
+  max-height: 60dvh;
+  overflow: auto;
+}
+.ol-control button:focus-visible {
+  outline: 2px solid #184b78;
+  outline-offset: 2px;
+}

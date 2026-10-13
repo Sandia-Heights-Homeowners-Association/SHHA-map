@@ -1,0 +1,11 @@
+{
+  "name": "shha-map",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=24 <25" },
+  "scripts": {
+    "import": "node scripts/import-map.mjs",
+    "check": "node scripts/check-map.mjs"
+  }
+}
