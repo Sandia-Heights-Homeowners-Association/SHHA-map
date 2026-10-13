@@ -1,143 +1,78 @@
 # Sandia Heights neighborhood map
 
-SHHA's public neighborhood map, maintained in QGIS and exported with qgis2web.
-This repository contains the public web export and its publishing helpers. It is
-independent of the private SHHA Toolbox and does not read the homeowner database.
+SHHA's public interactive neighborhood map, maintained in QGIS and published as a
+static OpenLayers website. Visitors can explore neighborhood layers, inspect
+public attributes, filter categories and switch between street, aerial and plain
+backgrounds.
 
-GitHub Pages publishes `site/` after checks pass on every push to `main`.
-GitHub accounts with repository write access control publishing; visitors do not
-sign in. Browser editing and Microsoft sign-in are not part of this version.
+**Live map:** [GitHub Pages](https://sandia-heights-homeowners-association.github.io/SHHA-map/).
 
-## Update the map
+## Architecture and hosting
 
-One-time setup: install Node.js 24 LTS and GitHub Desktop, then clone this
-repository. No npm packages or GIS server are needed.
+| Component | Responsibility |
+| --- | --- |
+| Master QGIS project and source GIS files | Maintained separately in SHHA's backed-up GIS storage. |
+| qgis2web OpenLayers export | Produces the public geometry, styles and browser assets. |
+| This public repository | Validated export in `site/`, import/check scripts and the approved `public-fields.json` field list. |
+| GitHub Pages | Serves `site/` after checks pass on pushes to `main`. |
+| Browser | Runs map controls, attribute search/paging, category filters and record location. |
+| External map services | OpenStreetMap streets/address search and historical USGS aerial tiles, with attribution. |
 
-1. Fetch/pull the latest repository in GitHub Desktop.
-2. Edit and save the master project in QGIS.
-3. Use qgis2web's **OpenLayers** option to export to a **separate folder outside this repository**.
-4. Open a terminal in the cloned repository and run:
+**Azure does not host this map.** There is no application server, homeowner
+database connection, login, Microsoft integration or GIS backend. GitHub write
+access controls publication; visitors have read-only access to the entire export.
+
+The default GitHub Pages address is the current public address.
+`map.sandiahomeowners.org` is a possible future custom domain; its setup is
+deferred. No custom-domain cutover is needed to maintain the existing site.
+
+## Update and publish
+
+Use **Node.js 24 LTS**, Git (or GitHub Desktop), QGIS and qgis2web. No npm
+dependencies or GIS server are needed.
+
+1. Pull the latest repository before editing.
+2. Edit/save the master QGIS project. Export using qgis2web's **OpenLayers**
+   option into a separate folder outside this repository.
+3. Import the export:
 
    ```sh
    npm run import -- "/full/path/to/new/qgis2web-export"
+   npm run check
+   npm test
    ```
 
-   On Windows, use the Windows folder path in the quotes. The import command
-   replaces the previous `site/` only after validation succeeds. It removes
-   obsolete assets, reapplies the street background, map controls, responsive layout
-   and title, and removes source
-   editor usernames, local file paths and unused KML description/snippet fields.
-   It does not change the original export, geometry, QGIS style definitions or
-   visible map fields. The browser applies adjustable area transparency.
+4. Preview locally:
 
-5. Review the changes in GitHub Desktop, write a short summary, commit and push.
-6. Wait for **Check and publish map** in GitHub Actions to succeed, then check the
-   live map. A successful push alone does not prove deployment succeeded.
+   ```sh
+   python3 -m http.server 3140 --bind 127.0.0.1 --directory site
+   ```
 
-New layers or fields require an explicit review/update of `public-fields.json`.
-Contact-like values and unexpected fields stop the import/check without printing
-feature values. These are basic checks, not a guarantee about arbitrary free text.
-Keep homeowner names, contacts, private records and credentials out of this
-**public** repository, including Git history.
+   Open `http://localhost:3140/`. On Windows, use `python` or `py` as appropriate.
+   Check desktop/phone layout, zoom, layer/category controls, popups and tables.
+5. Review the diff, commit and push to `main`. Verify the exact commit's
+   **Check and publish map** deployment in GitHub Actions, then inspect the live map.
 
-Keep the original QGIS project and source GIS files in SHHA's separately backed-up
-GIS storage. The web export is not a full source-project backup. A restored web
-version can be published by reverting the relevant Git commit.
+The importer validates before replacing `site/`, removes obsolete assets,
+scrubs source-editor usernames/local paths/unused description fields, and reapplies
+the website controls and presentation. The master project/export stays unchanged.
+Read [maintenance](docs/maintenance.md) for import behavior and external-service
+details.
 
-## Local check and preview
+## Public-data boundary and recovery
 
-```sh
-npm run check
-python3 -m http.server 3140 --bind 127.0.0.1 --directory site
-```
+Everything in `site/` and Git history is public, including attributes that are
+not currently visible in a popup, category or table. Hiding a layer or column
+does not protect data. Keep homeowner names, contacts, private records and
+credentials out of exports and commits.
 
-Open `http://localhost:3140`. Use `python` or `py` instead of `python3` when that is
-the Python command on Windows. Check zoom, layer toggles and popups on a desktop
-and phone. OpenStreetMap streets provide the default background. Area layers start
-at 55% opacity so roads and landmarks remain visible; the slider changes area-layer
-opacity without fading point markers. The Layers panel retains all eleven layers
-with expandable legends, and Fit neighborhood restores the neighborhood extent.
-Background choices are OpenStreetMap, Satellite / aerial (USGS) and Plain.
-The importer reapplies these controls.
+New layers/fields require explicit review of `public-fields.json`. Unexpected
+fields and contact-like values stop import/check without printing feature values.
+Automated checks do not replace reviewing arbitrary free text.
 
-Each categorized legend has individual checkboxes, category counts and All/None
-buttons. The importer derives categories from the current exported QGIS styles,
-including ordered expression rules. Unclassified features retain their own
-category. Filters change rendering without removing features or hiding their
-attributes from public access. Layers with a single symbol retain their whole-layer
-toggle. An empty exported rule is not reinterpreted as a confirmed classification.
+Back up the master QGIS project and source GIS files separately. A web export is
+not a complete project backup. To restore a published version, revert the
+appropriate Git commit, pass checks and verify its new Pages deployment.
 
-The user authorized **public attribute tables for existing map data** on October
-13. Open Layer data, or View data beside a layer, to inspect every published
-attribute. Search and 30-row paging operate in browser memory. Match legend filters
-optionally limits rows to selected categories; it starts off so the full layer is
-available. Zoom highlights and locates a record without changing legend selections.
-All eleven tables reuse the approved public export; removed
-editor usernames, local paths and unused description/snippet fields stay removed.
-Tables are read-only and have no website database connection or additional exports.
-Private GIS attributes would require a separate protected data service; hiding
-categories or table columns on this public site is not access control.
-
-The address-search control uses an external OpenStreetMap Nominatim service.
-Street tiles load directly from `https://tile.openstreetmap.org/{z}/{x}/{y}.png`,
-with visible contributor attribution and normal browser caching/referrer behavior.
-There is no tile prefetch, offline download or proxy. This community service has
-no availability guarantee; reassess hosting if traffic grows. See the
-[OpenStreetMap tile policy](https://operations.osmfoundation.org/policies/tiles/).
-The neighborhood layers still load from this website. No API key or paid map
-service is configured.
-
-USGS aerial tiles come from its documented
-[USGSImageryOnly service](https://www.usgs.gov/faqs/what-are-urls-imagery-services-national-map-and-are-they-cached-or-dynamic?items_per_page=6&page=1),
-with USDA/USGS attribution. This is historical aerial photography, not live imagery.
-Testing in this neighborhood found cache levels above 16 unavailable, so the source
-uses level 16 and upscales for closer views rather than requesting missing tiles.
-There is no imagery prefetch or offline tile download.
-
-## Hosting and domain
-
-Default URL: https://sandia-heights-homeowners-association.github.io/SHHA-map/
-
-Intended URL: https://map.sandiahomeowners.org
-
-After the default URL is verified, configure the custom domain in GitHub Pages
-and add this record in the existing InMotion DNS zone:
-
-| Type | Name | Target |
-| --- | --- | --- |
-| CNAME | `map` | `sandia-heights-homeowners-association.github.io` |
-
-The target has no `https://` prefix, repository path or trailing slash. DNS stays
-with InMotion. GitHub's custom-domain certificate must be issued and HTTPS
-enforcement verified before declaring the custom URL complete.
-
-## Deployment status
-
-October 13, 2026: initial public export prepared from Larry's September 29 export.
-All eleven layers retained; source editor usernames, local paths and unused KML
-description/snippet fields removed. JavaScript/assets/field checks passed on Node 24.
-Retained properties and geometry match the original. Desktop/phone rendering,
-zoom, layer switching and parcel popups passed browser checks with no console
-errors. Failed imports preserve the preceding site. Initial deployment
-`aecf4bea98c1383e88b010c1ff3b0f91479b3b31` passed GitHub Actions and anonymous
-remote rendering; the published HTML/CSS/JS matched the checked files.
-The default GitHub Pages address is live. Custom-domain binding/DNS/HTTPS and
-Larry's maintainer access are pending user setup. The user chose to keep the
-GitHub address for now. A browser tab icon is included
-to avoid requesting a nonexistent favicon at the organization site's root.
-
-October 13, 2026: added OpenStreetMap background, adjustable area transparency,
-compact layer/legend panel, toolbar and neighborhood reset. Node 24 checks and
-desktop/phone browser checks passed: basemap switching, eleven layer controls,
-legend images, slider extremes, unchanged point opacity, reset and attribution.
-The importer preserves these additions on re-export and versions the hosting CSS
-and JavaScript URLs to avoid reusing stale browser assets. Automatic publication
-continues through the existing GitHub Pages workflow; verify the exact release's
-deployment result in GitHub Actions. The custom domain remains deferred.
-
-October 13, 2026: added the USGS imagery background, category checkboxes generated
-from the current QGIS styles, and public attribute tables. Validation includes
-all eleven table totals/attribute columns, category-aware counts (North 1: 66),
-paging/search/no-match states, record location and source-rule tests. Close-zoom
-imagery is capped to the verified available cache level. Publishing and final
-remote verification follow through the existing GitHub Pages workflow.
+[Maintenance guide](docs/maintenance.md) covers controls, imagery, service
+constraints and optional domain setup.
